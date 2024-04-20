@@ -1,6 +1,6 @@
 # View the live link here
 
-https://no-bore.netlify.app/
+<https://no-bore.netlify.app/>
 
 ## Getting Started with this app
 
