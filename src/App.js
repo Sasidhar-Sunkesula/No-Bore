@@ -5,6 +5,9 @@ import VideoContainer from "./components/VideoContainer";
 import WatchVideo from "./components/WatchVideo";
 import { Provider } from "react-redux";
 import dataStore from "./utils/dataStore";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import WatchLater from "./components/WatchLater";
 
 const appRouter = createBrowserRouter([
   {
@@ -18,6 +21,18 @@ const appRouter = createBrowserRouter([
       {
         path: "/watch/:reqId",
         element: <WatchVideo />,
+      },
+      {
+        path: "/watchlater",
+        element: <WatchLater />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
       },
     ],
   },
