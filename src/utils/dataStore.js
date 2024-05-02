@@ -5,6 +5,7 @@ import chatSlice from "./chatSlice";
 import userSlice from "./userSlice";
 import themeSlice from "./themeSlice";
 import videoListSlice from "./videoListSlice";
+import watchLaterSlice from "./watchLater";
 
 const dataStore = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const dataStore = configureStore({
     chat: chatSlice,
     user: userSlice,
     theme: themeSlice,
+    watchLater: watchLaterSlice,
     videoList: videoListSlice,
   },
 });
