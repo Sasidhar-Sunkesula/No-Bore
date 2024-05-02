@@ -4,7 +4,6 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     user: null,
-    watchList: [],
   },
   reducers: {
     login: (state, action) => {
@@ -13,14 +12,8 @@ const userSlice = createSlice({
     logout: (state) => {
       state.user = null;
     },
-    addToList: (state, action) => {
-      state.watchList.push(action.payload);
-    },
-    removeFromList: (state, action) =>{
-      state.watchList.splice(action.payload, 1);
-    }
   },
 });
 
-export const { login, logout,addToList, removeFromList } = userSlice.actions;
+export const { login, logout } = userSlice.actions;
 export default userSlice.reducer;
