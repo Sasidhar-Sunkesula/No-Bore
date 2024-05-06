@@ -6,6 +6,7 @@ import userSlice from "./userSlice";
 import themeSlice from "./themeSlice";
 import videoListSlice from "./videoListSlice";
 import watchLaterSlice from "./watchLater";
+import subscriptionsSlice from "./subscriptionsSlice";
 
 const dataStore = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const dataStore = configureStore({
     theme: themeSlice,
     watchLater: watchLaterSlice,
     videoList: videoListSlice,
+    subscriptions: subscriptionsSlice
   },
 });
 

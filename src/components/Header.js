@@ -1,23 +1,31 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/menuSlice";
 import { useEffect, useState } from "react";
 import { YOUTUBE_SEARCH_API } from "../utils/constants";
 import { cacheResults } from "../utils/searchSlice";
+import { login } from "../utils/userSlice";
+import { useLogout } from "../hooks/useLogout";
 
 const Header = () => {
-  const [searchQuery, setsearchQuery] = useState("");
-  const [searchPredictionList, setsearchPredictionList] = useState([]);
-  const [showSuggestions, setshowSuggestions] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [theme, setTheme] = useState("");
+  const [searchPredictionList, setSearchPredictionList] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const searchCache = useSelector((store) => store.search);
-  const dispatchFun = useDispatch();
+  const user = useSelector((store) => store.user.user);
+  const dispatch = useDispatch();
+  const { handleLogout } = useLogout();
+
   useEffect(() => {
-    //make an api call after every key press
-    // but if the difference between 2 API calls is <200ms
-    // decline that API call
+    // Get theme from local storage or use default value
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+  }, []);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       if (searchCache[searchQuery]) {
-        setsearchPredictionList(searchCache[searchQuery]);
+        setSearchPredictionList(searchCache[searchQuery]);
       } else {
         getSearchSuggestions();
       }
@@ -28,70 +36,180 @@ const Header = () => {
     };
   }, [searchQuery]);
 
+  useEffect(() => {
+    // Don't do anything if theme hasn't been set yet
+    if (!theme) return;
+    // Save theme to local storage whenever it changes
+    localStorage.setItem("theme", theme);
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    dispatch(login(user));
+  }, [dispatch]);
+
   const handleClick = () => {
-    dispatchFun(toggleMenu());
+    dispatch(toggleMenu());
+  };
+  const toggle = () => {
+    setTheme(theme === "light" ? "dark" : "light");
   };
 
   const getSearchSuggestions = async () => {
     const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
     const json = await data.json();
-    //console.log(json[1]);
-    setsearchPredictionList(json[1]);
-
-    // Update the cache
-    dispatchFun(
-      cacheResults({
-        [searchQuery]: json[1],
-      })
-    );
+    setSearchPredictionList(json[1]);
+    dispatch(cacheResults({ [searchQuery]: json[1] }));
   };
 
   return (
-    <div className="relative">
-      <div className="flex px-4 py-2 items-center justify-between">
-        <div className="flex items-center p-3">
-          <img
-            onClick={() => handleClick()}
-            alt="Hamburger"
-            className="w-5 cursor-pointer"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/2048px-Hamburger_icon.svg.png"
-          ></img>
-          <h1 className="font-bold text-xl text-slate-800 mx-4 cursor-pointer">
-            NoBore
-          </h1>
+    <div className=" dark:bg-gray-800 w-full dark:text-white">
+      <div className="flex px-8 py-2 items-center w-full justify-between">
+        <div className="Hamburger-Logo flex items-center p-3">
+          <label className="btn  btn-circle swap swap-rotate">
+            {/* this hidden checkbox controls the state */}
+            <input type="checkbox" onClick={() => handleClick()} />
+
+            {/* hamburger icon */}
+            <svg
+              className="swap-off fill-current"
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 512 512"
+            >
+              <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" />
+            </svg>
+
+            {/* close icon */}
+            <svg
+              className="swap-on fill-current"
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 512 512"
+            >
+              <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
+            </svg>
+          </label>
+          <a href="/">
+            <h1 className="font-bold text-xl  mx-4 cursor-pointer">NoBore</h1>
+          </a>
         </div>
-        <div className="w-2/5 flex">
-          <input
-            placeholder="Search"
-            value={searchQuery}
-            onChange={(e) => setsearchQuery(e.target.value)}
-            onFocus={() => setshowSuggestions(true)}
-            onBlur={() => setshowSuggestions(false)}
-            className="w-full py-2 px-4 border border-gray-300 rounded-l-full"
-          ></input>
-          <button className="border px-4 py-2 border-gray-300 rounded-r-full">
-            Search
-          </button>
+        <div className="flex flex-col w-2/5 relative">
+          <div className="Input-Button w-full relative flex">
+            <input
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setShowSuggestions(false)}
+              className="w-full dark:bg-gray-800 py-2 px-4 border border-gray-300 rounded-l-full"
+            ></input>
+            <button className="border px-6 py-2 border-gray-300 rounded-r-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+          {searchPredictionList.length > 0 && showSuggestions && (
+            <div className="w-full border-2 dark:bg-gray-800  min-h-0 shadow-lg rounded-lg bg-white p-1 absolute top-12">
+              <ul>
+                {searchPredictionList.map((item) => (
+                  <li
+                    key={item}
+                    className="p-2 flex gap-4 font-mukta dark:hover:bg-gray-700 hover:bg-gray-100 cursor-default"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-        <div>
-          <img
-            alt="user-icon"
-            className="w-14"
-            src="data:image/png;base64,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"
-          ></img>
+        <div className="Theme-Email-Login-Logout flex gap-4">
+          <label className="swap swap-rotate">
+            {/* this hidden checkbox controls the state */}
+            <input
+              onClick={() => toggle()}
+              type="checkbox"
+              className="theme-controller"
+              value="synthwave"
+            />
+
+            {/* sun icon */}
+            <svg
+              className="swap-off fill-current w-10 h-10"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
+            </svg>
+
+            {/* moon icon */}
+            <svg
+              className="swap-on fill-current w-10 h-10"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
+            </svg>
+          </label>
+          <nav>
+            {user && (
+              <div>
+                <div className="badge p-6 mr-3 badge-outline">{user.email}</div>
+                <button
+                  className="btn dark:bg-gray-600 dark:text-white btn-outline"
+                  onClick={handleLogout}
+                >
+                  Log out
+                </button>
+              </div>
+            )}
+            {!user && (
+              <div className="flex gap-4">
+                <a href="/login">
+                  <button className="btn dark:bg-gray-600 dark:text-white btn-outline">
+                    Login
+                  </button>
+                </a>
+                <a href="/signup">
+                  <button className="btn dark:bg-gray-600 dark:text-white btn-outline">
+                    Signup
+                  </button>
+                </a>
+              </div>
+            )}
+          </nav>
         </div>
       </div>
-      {searchPredictionList.length > 0 && showSuggestions && (
-        <div className="w-1/3 border-2 min-h-0 shadow-lg rounded-lg bg-white p-1 absolute left-1/3">
-          <ul>
-            {searchPredictionList.map((item) => (
-              <li key={item} className="p-2 hover:bg-gray-100 cursor-default">
-                🔍 {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 };

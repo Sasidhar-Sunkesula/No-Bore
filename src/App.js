@@ -8,6 +8,7 @@ import dataStore from "./utils/dataStore";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import WatchLater from "./components/WatchLater";
+import Subscriptions from "./components/Subscriptions";
 
 const appRouter = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const appRouter = createBrowserRouter([
       {
         path: "/watchlater",
         element: <WatchLater />,
+      },
+      {
+        path: "/subscriptions",
+        element: <Subscriptions />,
       },
       {
         path: "/login",
