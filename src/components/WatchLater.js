@@ -2,17 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { removeFromList } from "../utils/watchLater";
 import EmptyWatchList from "./EmptyWatchList";
-import { useLocation } from 'react-router-dom';
 
 const Watchlater = () => {
   const dispatchFun = useDispatch();
-  const location = useLocation();
   const watchListFromStore = useSelector((store) => store.watchLater.value);
   const user = JSON.parse(localStorage.getItem("user"));
   const remove = async (item) => {
     const index = watchListFromStore.findIndex((video) => video.id === item.id);
     dispatchFun(removeFromList(index));
-    const response = await fetch(
+    await fetch(
       `http://localhost:4000/api/watchList/removeFromList/${user.email}/${item.id}`,
       {
         method: "DELETE",

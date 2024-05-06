@@ -9,22 +9,17 @@ const Subscriptions = () => {
   const remove = async (item) => {
     const index = subscriptionsList.findIndex((channel) => channel === item);
     dispatchFun(removeFromSubscriptionsList(index));
-    const response = await fetch(
-      "http://localhost:4000/api/subscriptions/removeFromList",
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({
-          email: user.email,
-          channelName: item,
-        }),
-      }
-    );
-    const data = await response.json();
-    console.log(data);
+    await fetch("http://localhost:4000/api/subscriptions/removeFromList", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        email: user.email,
+        channelName: item,
+      }),
+    });
   };
 
   if (subscriptionsList.length === 0) {
@@ -49,7 +44,9 @@ const Subscriptions = () => {
                     />
                   </div>
                 </div>
-                <h3 className="font-semibold dark:text-white text-gray-800">{channel}</h3>
+                <h3 className="font-semibold dark:text-white text-gray-800">
+                  {channel}
+                </h3>
               </div>
               <button
                 onClick={() => remove(channel)}

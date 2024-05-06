@@ -1,5 +1,7 @@
 import { useDispatch } from "react-redux";
 import { logout } from "../utils/userSlice";
+import { setsubscriptionsList } from "../utils/subscriptionsSlice";
+import { watchList } from "../utils/watchLater";
 export const useLogout = () => {
   const dispatch = useDispatch();
 
@@ -8,8 +10,9 @@ export const useLogout = () => {
     localStorage.removeItem("user");
 
     // dispatch logout action
+    dispatch(setsubscriptionsList([]));
+    dispatch(watchList([]));
     dispatch(logout());
-    
   };
 
   return { handleLogout };

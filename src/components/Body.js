@@ -55,7 +55,7 @@ const Body = () => {
       getWatchList();
       getSubscriptions();
     }
-  }, );
+  }, []);
 
   return (
     <div className="min-h-[90vh] w-full dark:bg-gray-800 dark:text-white font-mukta flex">
