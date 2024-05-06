@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSignup } from "../hooks/useSignup";
 import { useDispatch } from "react-redux";
-import { closeMenu } from "../utils/menuSlice";
+import { closeMenu, openMenu } from "../utils/menuSlice";
 import { Link } from "react-router-dom";
 
 const Signup = () => {
@@ -9,25 +9,31 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const { signup, error, isLoading } = useSignup();
   const dispatchFun = useDispatch();
-  dispatchFun(closeMenu());
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     await signup(email, password);
     setEmail("");
     setPassword("");
   };
-
+  useEffect(() => {
+    dispatchFun(closeMenu());
+    return () => {
+      dispatchFun(openMenu());
+    };
+  });
   return (
-    <form className="signup rounded-xl text-black shadow-xl" onSubmit={handleSubmit}>
+    <form
+      className="signup rounded-xl text-black shadow-xl"
+      onSubmit={handleSubmit}
+    >
       <h3 className=" text-center text-2xl mb-4 font-bold p-4">Sign Up</h3>
 
       <label className=" mt-28 py-4 font-semibold text-base">
         Email address:
       </label>
       <input
-      placeholder="Enter your email"
+        placeholder="Enter your email"
         className="px-4 bg-white py-3"
         type="email"
         onChange={(e) => setEmail(e.target.value)}
@@ -50,8 +56,11 @@ const Signup = () => {
       </button>
       {error && <div className="error">{error}</div>}
       <div className="flex justify-center gap-1">
-      <p>Already have an account? </p>
-      <Link className="underline text-blue-500" to={"/login"}> Login instead</Link>
+        <p>Already have an account? </p>
+        <Link className="underline text-blue-500" to={"/login"}>
+          {" "}
+          Login instead
+        </Link>
       </div>
     </form>
   );

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 import { useDispatch } from "react-redux";
-import { closeMenu } from "../utils/menuSlice";
+import { closeMenu, openMenu } from "../utils/menuSlice";
 import { Link } from "react-router-dom";
 
 const Login = () => {
@@ -10,7 +10,6 @@ const Login = () => {
   const { login, error, isLoading } = useLogin();
   const dispatchFun = useDispatch();
 
-  dispatchFun(closeMenu());
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -22,8 +21,18 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    dispatchFun(closeMenu());
+    return () => {
+      dispatchFun(openMenu());
+    };
+  });
+
   return (
-    <form className="login rounded-xl text-black shadow-xl" onSubmit={handleSubmit}>
+    <form
+      className="login rounded-xl text-black shadow-xl"
+      onSubmit={handleSubmit}
+    >
       <h3 className=" text-center text-2xl mb-4 font-bold p-4">Log In</h3>
 
       <label className=" mt-28 py-4 font-semibold text-base">
@@ -52,10 +61,11 @@ const Login = () => {
       </button>
       {error && <div className="error">{error}</div>}
       <div className="flex justify-center gap-1">
-      <p>New here? </p>
-      <Link  to="/signup" className="underline text-blue-500">Signup instead</Link>
+        <p>New here? </p>
+        <Link to="/signup" className="underline text-blue-500">
+          Signup instead
+        </Link>
       </div>
-      
     </form>
   );
 };

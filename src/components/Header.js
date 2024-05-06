@@ -5,6 +5,7 @@ import { YOUTUBE_SEARCH_API } from "../utils/constants";
 import { cacheResults } from "../utils/searchSlice";
 import { login } from "../utils/userSlice";
 import { useLogout } from "../hooks/useLogout";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -195,16 +196,16 @@ const Header = () => {
             )}
             {!user && (
               <div className="flex gap-4">
-                <a href="/login">
+                <Link to="/login">
                   <button className="btn dark:bg-gray-600 dark:text-white btn-outline">
                     Login
                   </button>
-                </a>
-                <a href="/signup">
+                </Link>
+                <Link to="/signup">
                   <button className="btn dark:bg-gray-600 dark:text-white btn-outline">
                     Signup
                   </button>
-                </a>
+                </Link>
               </div>
             )}
           </nav>
