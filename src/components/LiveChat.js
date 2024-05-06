@@ -22,7 +22,7 @@ const LiveChat = () => {
     return () => {
       clearInterval(i);
     };
-  }, []);
+  }, [dispatchFun]);
 
   return (
     <form

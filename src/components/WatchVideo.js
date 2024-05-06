@@ -66,7 +66,7 @@ const WatchVideo = () => {
     }
     if (index === -1) {
       dispatchFun(addToList(video));
-      const response = await fetch("http://localhost:4000/api/watchList", {
+      await fetch("http://localhost:4000/api/watchList", {
         method: "POST",
         body: JSON.stringify({ email: user.email, video }),
         headers: {
@@ -80,7 +80,7 @@ const WatchVideo = () => {
   };
   const removeFromWatchlist = async () => {
     dispatchFun(removeFromList(index));
-    const response = await fetch(
+    await fetch(
       `http://localhost:4000/api/watchList/removeFromList/${user.email}/${video.id}`,
       {
         method: "DELETE",
@@ -99,7 +99,7 @@ const WatchVideo = () => {
     }
     if (subscribedIndex === -1) {
       dispatchFun(addToSubscriptionsList(video.snippet.channelTitle));
-      const data = await fetch("http://localhost:4000/api/subscriptions", {
+      await fetch("http://localhost:4000/api/subscriptions", {
         method: "POST",
         body: JSON.stringify({
           email: user.email,
@@ -110,7 +110,6 @@ const WatchVideo = () => {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      const response = await data.json();
     } else {
       removeFromSubscriptions();
     }
@@ -118,21 +117,17 @@ const WatchVideo = () => {
 
   const removeFromSubscriptions = async () => {
     dispatchFun(removeFromSubscriptionsList(subscribedIndex));
-    const data = await fetch(
-      "http://localhost:4000/api/subscriptions/removeFromList/",
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({
-          email: user.email,
-          channelName: video.snippet.channelTitle,
-        }),
-      }
-    );
-    const response = await data.json();
+    await fetch("http://localhost:4000/api/subscriptions/removeFromList/", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        email: user.email,
+        channelName: video.snippet.channelTitle,
+      }),
+    });
   };
 
   if (!video || isLoading) {

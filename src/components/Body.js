@@ -12,14 +12,6 @@ const Body = () => {
   const isMenu = useSelector((store) => store.menu.value);
   const dispatchFun = useDispatch();
 
-  useEffect(() => {
-    getVideos();
-    if (user) {
-      getWatchList();
-      getSubscriptions();
-    }
-  }, []);
-
   const user = JSON.parse(localStorage.getItem("user"));
   const getVideos = async () => {
     const data = await fetch(YOUTUBE_API_URL);
@@ -56,6 +48,14 @@ const Body = () => {
     const subscriptionList = response.map((doc) => doc.channelName);
     dispatchFun(setsubscriptionsList(subscriptionList));
   };
+
+  useEffect(() => {
+    getVideos();
+    if (user) {
+      getWatchList();
+      getSubscriptions();
+    }
+  }, );
 
   return (
     <div className="min-h-[90vh] w-full dark:bg-gray-800 dark:text-white font-mukta flex">
