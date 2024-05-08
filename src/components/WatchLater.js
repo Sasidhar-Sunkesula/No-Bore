@@ -11,7 +11,7 @@ const Watchlater = () => {
     const index = watchListFromStore.findIndex((video) => video.id === item.id);
     dispatchFun(removeFromList(index));
     await fetch(
-      `http://localhost:4000/api/watchList/removeFromList/${user.email}/${item.id}`,
+      `https://nobore-backend.onrender.com/api/watchList/removeFromList/${user.email}/${item.id}`,
       {
         method: "DELETE",
         headers: {

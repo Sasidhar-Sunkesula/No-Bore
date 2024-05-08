@@ -9,7 +9,7 @@ const Subscriptions = () => {
   const remove = async (item) => {
     const index = subscriptionsList.findIndex((channel) => channel === item);
     dispatchFun(removeFromSubscriptionsList(index));
-    await fetch("http://localhost:4000/api/subscriptions/removeFromList", {
+    await fetch("https://nobore-backend.onrender.com/api/subscriptions/removeFromList", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

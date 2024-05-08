@@ -1,22 +1,24 @@
 // date fns
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-import { formatCount } from '../utils/helper';
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import { formatCount } from "../utils/helper";
 
 const VideoCard = ({ items }) => {
-  
   const { channelTitle, title, thumbnails, publishedAt } = items.snippet;
-  const {viewCount} = items.statistics;
+  const { viewCount } = items.statistics;
   const { medium } = thumbnails;
   const date = publishedAt.slice(0, 10);
   const formattedViews = formatCount(viewCount);
-  const formattedDate = formatDistanceToNow(date, { addSuffix: true }).replace('about ', '');
+  const formattedDate = formatDistanceToNow(date, { addSuffix: true }).replace(
+    "about ",
+    ""
+  );
   return (
     <div className="w-[350px] flex flex-col justify-between font-mukta cursor-pointer hover:shadow-xl rounded-lg h-80 my-4 mx-3 p-3">
       <div>
-      <img alt="thumbnail" className="rounded-lg" src={medium.url}></img>
-      <div className="p-1 text-lg font-semibold line-clamp-2">{title}</div>
+        <img alt="thumbnail" className="rounded-lg" src={medium.url}></img>
+        <div className="p-1 text-lg font-semibold line-clamp-2">{title}</div>
       </div>
-      <div className="flex mt-1 items-center justify-between">
+      <div className="flex mt-1 pr-1 items-center justify-between">
         <div className="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -31,10 +33,11 @@ const VideoCard = ({ items }) => {
             />
           </svg>
           <div>
-          <div className=" ml-1 font-semibold text-sm">{channelTitle}</div>
-          <div className=" ml-1 font-light text-sm">{formattedViews} views</div>
+            <div className=" ml-1 font-semibold text-sm">{channelTitle}</div>
+            <div className=" ml-1 font-light text-sm">
+              {formattedViews} views
+            </div>
           </div>
-         
         </div>
         <div className=" font-semibold text-sm">{formattedDate}</div>
       </div>

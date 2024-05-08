@@ -21,7 +21,7 @@ const Body = () => {
 
   const getWatchList = async () => {
     const data = await fetch(
-      `http://localhost:4000/api/watchList/${user.email}`,
+      `https://nobore-backend.onrender.com/api/watchList/${user.email}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -36,7 +36,7 @@ const Body = () => {
 
   const getSubscriptions = async () => {
     const data = await fetch(
-      `http://localhost:4000/api/subscriptions/${user.email}`,
+      `https://nobore-backend.onrender.com/api/subscriptions/${user.email}`,
       {
         headers: {
           "Content-Type": "application/json",

@@ -66,7 +66,7 @@ const WatchVideo = () => {
     }
     if (index === -1) {
       dispatchFun(addToList(video));
-      await fetch("http://localhost:4000/api/watchList", {
+      await fetch("https://nobore-backend.onrender.com/api/watchList", {
         method: "POST",
         body: JSON.stringify({ email: user.email, video }),
         headers: {
@@ -81,7 +81,7 @@ const WatchVideo = () => {
   const removeFromWatchlist = async () => {
     dispatchFun(removeFromList(index));
     await fetch(
-      `http://localhost:4000/api/watchList/removeFromList/${user.email}/${video.id}`,
+      `https://nobore-backend.onrender.com/api/watchList/removeFromList/${user.email}/${video.id}`,
       {
         method: "DELETE",
         headers: {
@@ -99,7 +99,7 @@ const WatchVideo = () => {
     }
     if (subscribedIndex === -1) {
       dispatchFun(addToSubscriptionsList(video.snippet.channelTitle));
-      await fetch("http://localhost:4000/api/subscriptions", {
+      await fetch("https://nobore-backend.onrender.com/api/subscriptions", {
         method: "POST",
         body: JSON.stringify({
           email: user.email,
@@ -117,7 +117,7 @@ const WatchVideo = () => {
 
   const removeFromSubscriptions = async () => {
     dispatchFun(removeFromSubscriptionsList(subscribedIndex));
-    await fetch("http://localhost:4000/api/subscriptions/removeFromList/", {
+    await fetch("https://nobore-backend.onrender.com/api/subscriptions/removeFromList/", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -143,7 +143,7 @@ const WatchVideo = () => {
       <div className="w-2/3">
         <VideoDetails video={video} />
         <div className="flex py-3 px-4 items-center justify-between">
-          <div className="font-bold w-2/4 justify-between items-center flex gap-2">
+          <div className="font-bold w-7/12 justify-between items-center flex gap-2">
             <div className="flex gap-x-2">
               <img src="/userIcon.svg" alt="user-icon"></img>
               <p className="text-xl font-extrabold">
@@ -151,10 +151,10 @@ const WatchVideo = () => {
               </p>
             </div>
             <div className="flex justify-between gap-x-3 items-center">
-              <div className="badge p-3 badge-outline">
+              <div className="badge p-4 badge-outline">
                 {formatCount(viewCount)} views
               </div>
-              <div className="badge p-3 badge-outline">
+              <div className="badge p-4 badge-outline">
                 {formatCount(likeCount)} likes
               </div>
             </div>
